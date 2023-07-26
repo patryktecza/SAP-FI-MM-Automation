@@ -1,0 +1,61 @@
+    Sub VBO2()
+
+
+If Not IsObject(SApplication) Then
+   Set SapGuiAuto = GetObject("SAPGUI")
+   Set SApplication = SapGuiAuto.GetScriptingEngine
+
+End If
+If Not IsObject(Connection) Then
+   Set Connection = SApplication.Children(0)
+End If
+If Not IsObject(session) Then
+   Set session = Connection.Children(0)
+End If
+If IsObject(WScript) Then
+   WScript.ConnectObject session, "on"
+   WScript.ConnectObject Application, "on"
+End If
+
+With ActiveSheet
+LastRow = .Cells(.Rows.Count, "A").End(xlUp).Row
+End With
+
+
+    For i = 10 To LastRow
+'Transation'
+session.findById("wnd[0]").resizeWorkingPane 188, 28, False
+session.findById("wnd[0]/tbar[0]/okcd").Text = "/NVBO2"
+session.findById("wnd[0]").sendVKey 0
+
+
+'Contract'
+session.findById("wnd[0]/usr/ctxtRV13A-KNUMA_BO").Text = Sheets("Sheet1").Cells(i, "B").Value
+
+session.findById("wnd[0]").sendVKey 0
+
+'Material for Settlement'
+session.findById("wnd[0]/mbar/menu[2]/menu[5]").Select
+
+
+Dim x As Integer
+
+While x < Sheets("Sheet1").Cells(i, "C").Value
+x = x + 1
+
+
+session.findById("wnd[0]/usr/sub:SAPMV13A:0411/ctxtKONP-BOMAT[2,16]").Text = Sheets("Sheet1").Cells(i, "A").Value
+On Error Resume Next
+session.findById("wnd[0]/usr").verticalScrollbar.Position = x
+
+
+Wend
+
+session.findById("wnd[0]/tbar[0]/btn[11]").press
+
+Next
+
+
+End Sub
+
+
