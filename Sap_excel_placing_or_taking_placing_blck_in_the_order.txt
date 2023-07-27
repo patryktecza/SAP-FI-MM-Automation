@@ -1,0 +1,89 @@
+    Sub Add_block()
+
+
+If Not IsObject(SApplication) Then
+   Set SapGuiAuto = GetObject("SAPGUI")
+   Set SApplication = SapGuiAuto.GetScriptingEngine
+
+End If
+If Not IsObject(Connection) Then
+   Set Connection = SApplication.Children(0)
+End If
+If Not IsObject(session) Then
+   Set session = Connection.Children(0)
+End If
+If IsObject(WScript) Then
+   WScript.ConnectObject session, "on"
+   WScript.ConnectObject Application, "on"
+End If
+
+With ActiveSheet
+LastRow = .Cells(.Rows.Count, "A").End(xlUp).Row
+End With
+
+
+    For i = 11 To LastRow
+    
+'Opening order transaction'
+session.findById("wnd[0]").maximize
+session.findById("wnd[0]/tbar[0]/okcd").Text = "va02"
+session.findById("wnd[0]").sendVKey 0
+
+'Placing order number'
+session.findById("wnd[0]/usr/ctxtVBAK-VBELN").Text = Sheets("Sheet1").Cells(i, "A").Value
+session.findById("wnd[0]").sendVKey 0
+
+'Change order block for pricing block'
+session.findById("wnd[1]/tbar[0]/btn[0]").press
+session.findById("wnd[0]/usr/tabsTAXI_TABSTRIP_OVERVIEW/tabpT\01/ssubSUBSCREEN_BODY:SAPMV45A:8083/ssubHEADER_FRAME:SAPMV45A:8085/cmbVBAK-FAKSK").Key = "04"
+session.findById("wnd[0]/usr/tabsTAXI_TABSTRIP_OVERVIEW/tabpT\01/ssubSUBSCREEN_BODY:SAPMV45A:8083/ssubHEADER_FRAME:SAPMV45A:8085/cmbVBAK-FAKSK").SetFocus
+session.findById("wnd[0]/tbar[0]/btn[11]").press
+
+
+    Sub Take_block()
+
+
+If Not IsObject(SApplication) Then
+   Set SapGuiAuto = GetObject("SAPGUI")
+   Set SApplication = SapGuiAuto.GetScriptingEngine
+
+End If
+If Not IsObject(Connection) Then
+   Set Connection = SApplication.Children(0)
+End If
+If Not IsObject(session) Then
+   Set session = Connection.Children(0)
+End If
+If IsObject(WScript) Then
+   WScript.ConnectObject session, "on"
+   WScript.ConnectObject Application, "on"
+End If
+
+With ActiveSheet
+LastRow = .Cells(.Rows.Count, "A").End(xlUp).Row
+End With
+
+
+    For i = 11 To LastRow
+    
+'Opening order transaction'
+session.findById("wnd[0]").maximize
+session.findById("wnd[0]/tbar[0]/okcd").Text = "va02"
+session.findById("wnd[0]").sendVKey 0
+
+'Placing order number'
+session.findById("wnd[0]/usr/ctxtVBAK-VBELN").Text = Sheets("Sheet1").Cells(i, "A").Value
+session.findById("wnd[0]").sendVKey 0
+
+'Change order status and extract currrent status in the order'
+session.findById("wnd[1]/tbar[0]/btn[0]").press
+Sheets("Sheet1").Cells(i, "C").Value = session.findById("wnd[0]/usr/tabsTAXI_TABSTRIP_OVERVIEW/tabpT\01/ssubSUBSCREEN_BODY:SAPMV45A:8083/ssubHEADER_FRAME:SAPMV45A:8085/cmbVBAK-FAKSK").Text
+session.findById("wnd[0]/usr/tabsTAXI_TABSTRIP_OVERVIEW/tabpT\01/ssubSUBSCREEN_BODY:SAPMV45A:8083/ssubHEADER_FRAME:SAPMV45A:8085/cmbVBAK-FAKSK").Key = " "
+session.findById("wnd[0]/usr/tabsTAXI_TABSTRIP_OVERVIEW/tabpT\01/ssubSUBSCREEN_BODY:SAPMV45A:8083/ssubHEADER_FRAME:SAPMV45A:8085/cmbVBAK-FAKSK").SetFocus
+session.findById("wnd[0]/tbar[0]/btn[11]").press
+
+Next
+
+
+End Sub
+
