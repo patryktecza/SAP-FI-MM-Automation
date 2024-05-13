@@ -1,0 +1,55 @@
+Sub Gielda()
+    Dim LiczbaWierszy As Long
+    Columns("B:B").Copy
+    Range("E:E").Select
+    ActiveSheet.Paste
+    Application.CutCopyMode = False
+    LiczbaWierszy = Cells(Rows.Count, "E").End(xlUp).Row
+    MsgBox LiczbaWierszy
+    ActiveSheet.Range("E1:E" & LiczbaWierszy).RemoveDuplicates Columns:=1, Header:=xlYes
+    Range("F2").Select
+    MsgBox LiczbaWierszy
+    ActiveCell.FormulaR1C1 = "=SUMIF(C[-4],RC[-1],C[-3])"
+    Range("F2").Select
+    LiczbaWierszy = Cells(Rows.Count, "E").End(xlUp).Row
+    MsgBox LiczbaWierszy
+    Selection.AutoFill Destination:=Range("F2:F" & LiczbaWierszy)
+    MsgBox "Teraz bede robil paski"
+    Range("F2:F" & LiczbaWierszy).Select
+    Selection.FormatConditions.AddDatabar
+    Selection.FormatConditions(Selection.FormatConditions.Count).ShowValue = True
+    Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+    With Selection.FormatConditions(1)
+        .MinPoint.Modify newtype:=xlConditionValueAutomaticMin
+        .MaxPoint.Modify newtype:=xlConditionValueAutomaticMax
+    End With
+    With Selection.FormatConditions(1).BarColor
+        .Color = 8700771
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).BarFillType = xlDataBarFillGradient
+    Selection.FormatConditions(1).Direction = xlContext
+    Selection.FormatConditions(1).NegativeBarFormat.ColorType = xlDataBarColor
+    Selection.FormatConditions(1).BarBorder.Type = xlDataBarBorderSolid
+    Selection.FormatConditions(1).NegativeBarFormat.BorderColorType = _
+        xlDataBarColor
+    With Selection.FormatConditions(1).BarBorder.Color
+        .Color = 8700771
+        .TintAndShade = 0
+    End With
+    Selection.FormatConditions(1).AxisPosition = xlDataBarAxisAutomatic
+    With Selection.FormatConditions(1).AxisColor
+        .Color = 0
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).NegativeBarFormat.Color
+        .Color = 255
+        .TintAndShade = 0
+    End With
+    With Selection.FormatConditions(1).NegativeBarFormat.BorderColor
+        .Color = 255
+        .TintAndShade = 0
+    End With
+    Range("E2").Select
+    
+End Sub
